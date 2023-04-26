@@ -18,40 +18,51 @@ use MoonShine\Fields\ID;
 use MoonShine\Actions\FiltersAction;
 use VI\MoonShineSpatieMediaLibrary\Fields\MediaLibrary;
 use MoonShine\Fields\Select;
+use MoonShine\Fields\BelongsTo;
+
+use MoonShine\Decorations\Grid;
+use MoonShine\Decorations\Column;
 
 class CategoryResource extends Resource
 {
 	public static string $model = Category::class;
 
-	public static string $title = 'Category';
+	public static string $title = 'Категории товаров';
+    public static string $orderField = 'sort';
+    public static string $orderType = 'ASC';
 
 	public function fields(): array
 	{
 		return [
-            Block::make('Данные товара', [
-                ID::make()->sortable(),
-                SwitchBoolean::make('Активеность', 'active')->onValue(1)->offValue(0)->default(1),
-                Text::make('Название Категории', 'name')->required()->sortable(),
-                Slug::make('Slug')->from('name')->separator('-')->unique()->hideOnIndex(),
-                Number::make('Сортировка', 'sort')->default(500),
 
+            Grid::make([
 
-                Select::make('Родительская категория', 'parent_id')
-                    ->options(Category::pluck('name', 'id')->all())->nullable(),
-
-                MediaLibrary::make('Изображение', 'category'),
-            ]),
-
-            Block::make('SEO, META- данные категории', [
-                Text::make('Заголовок H1', 'h1')->hideOnIndex(),
-                Textarea::make('Meta title', 'meta_title')->hideOnIndex(),
-                Textarea::make('Meta description', 'meta_description')->hideOnIndex(),
-                Text::make('Meta keywords', 'meta_keywords')->hideOnIndex(),
-            ]),
-
-            Block::make('Описания Категории', [
-                CKEditor::make('Описание категории', 'description')->hideOnIndex(),
-            ]),
+                Column::make([
+                    Block::make('Данные товара', [
+                        ID::make()->sortable(),
+                        SwitchBoolean::make('Активеность', 'active')->onValue(1)->offValue(0)->default(1),
+                        Text::make('Название Категории', 'name')->required()->sortable(),
+                        Slug::make('Slug')->from('name')->separator('-')->unique()->hideOnIndex(),
+                        Number::make('Сортировка', 'sort')->default(500)->sortable(),
+                        BelongsTo::make('Родительская категория', 'parent_id', 'name')
+                            ->nullable(),
+                        MediaLibrary::make('Изображение', 'category'),
+                    ]),
+                ])->columnSpan(6),
+                Column::make([
+                    Block::make('SEO, META- данные категории', [
+                        Text::make('Заголовок H1', 'h1')->hideOnIndex(),
+                        Textarea::make('Meta title', 'meta_title')->hideOnIndex(),
+                        Textarea::make('Meta description', 'meta_description')->hideOnIndex(),
+                        Text::make('Meta keywords', 'meta_keywords')->hideOnIndex(),
+                    ]),
+                ])->columnSpan(6),
+                Column::make([
+                    Block::make('Описания Категории', [
+                        CKEditor::make('Описание категории', 'description')->hideOnIndex(),
+                    ]),
+                ])->columnSpan(6),
+            ])
         ];
 	}
 
