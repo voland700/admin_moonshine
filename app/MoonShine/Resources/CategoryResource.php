@@ -46,7 +46,7 @@ class CategoryResource extends Resource
                         Number::make('Сортировка', 'sort')->default(500)->sortable(),
                         BelongsTo::make('Родительская категория', 'parent_id', 'name')
                             ->nullable(),
-                        MediaLibrary::make('Изображение', 'category'),
+                        MediaLibrary::make('Изображение', 'category')->removable(),
                     ]),
                 ])->columnSpan(6),
                 Column::make([

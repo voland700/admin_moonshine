@@ -2,6 +2,7 @@
 
 namespace App\MoonShine\Resources;
 
+
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Product;
 
@@ -20,6 +21,8 @@ use MoonShine\Fields\Json;
 use MoonShine\Fields\Select;
 use MoonShine\Decorations\Heading;
 
+use MoonShine\Fields\BelongsTo;
+
 use MoonShine\Decorations\Flex;
 use MoonShine\Decorations\Grid;
 use MoonShine\Decorations\Column;
@@ -29,14 +32,10 @@ use MoonShine\Decorations\Tab;
 
 
 
-
-
 class ProductResource extends Resource
 {
 	public static string $model = Product::class;
-
 	public static string $title = 'Товары каталога';
-
 
 	public function fields(): array
 	{
@@ -52,34 +51,39 @@ class ProductResource extends Resource
 
 
                                 ID::make()->sortable(),
-                                SwitchBoolean::make('Активен', 'active')->onValue(1)->offValue(0)->default(1),
+                                SwitchBoolean::make('Активен', 'active')->onValue(1)->offValue(0)->default(1)->sortable(),
                                 Flex::make([
-                                    Checkbox::make('Хит', 'hit'),
-                                    Checkbox::make('Новинка', 'new'),
-                                    Checkbox::make('Акция', 'stock'),
-                                    Checkbox::make('Советуем', 'advice'),
+                                    Checkbox::make('Хит', 'hit')->hideOnIndex(),
+                                    Checkbox::make('Новинка', 'new')->hideOnIndex(),
+                                    Checkbox::make('Акция', 'stock')->hideOnIndex(),
+                                    Checkbox::make('Советуем', 'advice')->hideOnIndex(),
                                 ])->justifyAlign('start'),
 
                                 Text::make('Название товара', 'name')->required()->sortable(),
-                                Slug::make('Slug')->from('title')->separator('-')->unique(),
-                                Number::make('Сортировка', 'sort')->default(500),
+                                Slug::make('Slug')->from('name')->separator('-')->unique()->hideOnIndex(),
+                                Number::make('Сортировка', 'sort')->default(500)->sortable(),
+
+                                BelongsTo::make('Категория товара', 'category_id', 'name') ->nullable(),
+
+
 
 
                                 Grid::make([
                                     Column::make([
-                                        MediaLibrary::make('Основное изображение', 'image'),
-                                    ])->columnSpan(4),
+                                        MediaLibrary::make('Основное изображение', 'image')->hideOnIndex(),
+                                    ])->columnSpan(6),
                                     Column::make([
                                         MediaLibrary::make('Изображение анонса', 'prev'),
-                                    ])->columnSpan(4),
+                                    ])->columnSpan(6),
                                     Column::make([
-                                        MediaLibrary::make('Дополнительные изображения', 'more')->multiple(),
-                                    ])->columnSpan(8),
+                                        MediaLibrary::make('Дополнительные изображения', 'more')->multiple()->hideOnIndex(),
+                                    ])->columnSpan(12),
                                 ]),
+
 
                                 Heading::make('Стоимость товара'),
                                 Flex::make([
-                                Text::make('Цена', 'base_price')->default(0),
+                                Text::make('Цена', 'base_price')->default(0)->sortable(),
                                 Select::make('Валюта', 'currency')
                                     ->options([
                                         'RUB' => 'RUB',
@@ -90,14 +94,20 @@ class ProductResource extends Resource
                                     ]),
 
                                 ])
+
                             ]),
 
                             Tab::make('Характеристики', [
 
                                 Json::make('Характеристики товара', 'properties')
-                                    ->keyValue('Характиристика', 'Значение')
-                                    ->removable()
+                                    ->fields([
+                                        Text::make('Title', 'title'),
+                                        Text::make('Value', 'value')
+                                    ])->removable()->hideOnIndex(),
+
                             ])
+
+
                         ])
 
 
@@ -126,15 +136,15 @@ class ProductResource extends Resource
 
                 Column::make([
                     Block::make('SEO, META- данные товара', [
-                        Text::make('Заголовок H1', 'h1'),
-                        Textarea::make('Meta title', 'meta_title'),
-                        Textarea::make('Meta description', 'meta_description'),
-                        Text::make('Meta keywords', 'meta_keywords'),
+                        Text::make('Заголовок H1', 'h1')->hideOnIndex(),
+                        Textarea::make('Meta title', 'meta_title')->hideOnIndex(),
+                        Textarea::make('Meta description', 'meta_description')->hideOnIndex(),
+                        Text::make('Meta keywords', 'meta_keywords')->hideOnIndex(),
 
                     ]),
                     Block::make('Описания товара', [
-                        Textarea::make('Краткое описание', 'summary'),
-                        CKEditor::make('Детальное описание', 'description'),
+                        Textarea::make('Краткое описание', 'summary')->hideOnIndex(),
+                        CKEditor::make('Детальное описание', 'description')->hideOnIndex(),
                     ]),
                 ])->columnSpan(6),
 

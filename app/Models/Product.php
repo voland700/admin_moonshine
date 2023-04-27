@@ -33,8 +33,14 @@ class Product extends Model implements HasMedia
         'currency',
         'base_price',
         'price',
-        'accessory'
+        'accessory',
+        'properties'
     ];
+
+    protected $casts = [
+        'properties' => 'array',
+    ];
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('image')
