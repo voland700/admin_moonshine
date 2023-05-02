@@ -42,14 +42,9 @@ class ProductResource extends Resource
 		return [
             Grid::make([
                 Column::make([
-
-
-
                     Block::make('Данные товара', [
                         Tabs::make([
                             Tab::make('Основное', [
-
-
                                 ID::make()->sortable(),
                                 SwitchBoolean::make('Активен', 'active')->onValue(1)->offValue(0)->default(1)->sortable(),
                                 Flex::make([
@@ -62,12 +57,7 @@ class ProductResource extends Resource
                                 Text::make('Название товара', 'name')->required()->sortable(),
                                 Slug::make('Slug')->from('name')->separator('-')->unique()->hideOnIndex(),
                                 Number::make('Сортировка', 'sort')->default(500)->sortable(),
-
-                                BelongsTo::make('Категория товара', 'category_id', 'name') ->nullable(),
-
-
-
-
+                                BelongsTo::make('Категория товара', 'category_id', 'name')->nullable(),
                                 Grid::make([
                                     Column::make([
                                         MediaLibrary::make('Основное изображение', 'image')->hideOnIndex(),
@@ -79,8 +69,6 @@ class ProductResource extends Resource
                                         MediaLibrary::make('Дополнительные изображения', 'more')->multiple()->hideOnIndex(),
                                     ])->columnSpan(12),
                                 ]),
-
-
                                 Heading::make('Стоимость товара'),
                                 Flex::make([
                                 Text::make('Цена', 'base_price')->default(0)->sortable(),
@@ -92,13 +80,9 @@ class ProductResource extends Resource
                                         'BYN' => 'BYN',
                                         'UAH' => 'UAH'
                                     ]),
-
                                 ])
-
                             ]),
-
                             Tab::make('Характеристики', [
-
                                 Json::make('Характеристики товара', 'properties')
                                     ->fields([
                                         Text::make('Title', 'title'),

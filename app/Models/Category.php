@@ -41,4 +41,29 @@ class Category extends Model implements HasMedia
     {
         return $this->hasMany(Product::class);
     }
+    //Accessors
+    public function getNestedAttribute(): string
+    {
+        switch ($this->depth) {
+            case 0:
+                return $this->name;
+                break;
+            case 1:
+                return '— '.$this->name;
+                break;
+            case 2:
+                return '— — '.$this->name;
+                break;
+            case 3:
+                return '— — — '.$this->name;
+                break;
+            case 4:
+                return '— — — — '.$this->name;
+                break;
+            case $this->depth >= 5:
+                return '— — — — ...'.$this->name;
+                break;
+            default: return $this->name;
+        }
+    }
 }

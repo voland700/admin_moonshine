@@ -41,7 +41,7 @@ class CategoryResource extends Resource
                     Block::make('Данные товара', [
                         ID::make()->sortable(),
                         SwitchBoolean::make('Активеность', 'active')->onValue(1)->offValue(0)->default(1),
-                        Text::make('Название Категории', 'name')->required()->sortable(),
+                        Text::make('Название Категории', 'name', fn($item) => $item->nested )->required(),
                         Slug::make('Slug')->from('name')->separator('-')->unique()->hideOnIndex(),
                         Number::make('Сортировка', 'sort')->default(500)->sortable(),
                         BelongsTo::make('Родительская категория', 'parent_id', 'name')
