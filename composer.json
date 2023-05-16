@@ -12,7 +12,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "moonshine/ckeditor": "^1.0",
-        "moonshine/moonshine": "^1.54",
+        "moonshine/moonshine": "^1.56",
         "spatie/laravel-medialibrary": "^10.0.0",
         "visual-ideas/moonshine-spatie-medialibrary": "^1.0"
     },

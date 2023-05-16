@@ -40,8 +40,40 @@ class CategoryResource extends Resource
                 Column::make([
                     Block::make('Данные товара', [
                         ID::make()->sortable(),
-                        SwitchBoolean::make('Активеность', 'active')->onValue(1)->offValue(0)->default(1),
-                        Text::make('Название Категории', 'name', fn($item) => $item->nested )->required(),
+                        SwitchBoolean::make('Активность', 'active')->onValue(1)->offValue(0)->default(1),
+                        //Text::make('Название Категории', 'name', fn($item) => $item->nested_name)->required(),
+                        Text::make('Название Категории', 'name', resource: function ($item) {
+                            if(request()->routeIs('*.index')) {
+
+
+                                $result = Category::withDepth()->find($item->id);
+                                //dd($result);
+
+                                switch ($result->depth) {
+                                    case 0:
+                                        return $result->name;
+                                        break;
+                                    case 1:
+                                        return '— '.$result->name;
+                                        break;
+                                    case 2:
+                                        return '— — '.$result->name;
+                                        break;
+                                    case 3:
+                                        return '— — — '.$result->name;
+                                        break;
+                                    case 4:
+                                        return '— — — — '.$result->name;
+                                        break;
+                                    case $this->depth >= 5:
+                                        return '— — — — ...'.$result->name;
+                                        break;
+                                    default: return $result->name;
+                                }
+                              //return $item->nested_name;
+                            }
+                            return $item->name;
+                        }),
                         Slug::make('Slug')->from('name')->separator('-')->unique()->hideOnIndex(),
                         Number::make('Сортировка', 'sort')->default(500)->sortable(),
                         BelongsTo::make('Родительская категория', 'parent_id', 'name')

@@ -28,6 +28,11 @@ class Category extends Model implements HasMedia
         'meta_title',
         'meta_keywords',
         'meta_description'
+
+    ];
+
+    public $appends = [
+        'nested_name'
     ];
 
     public function registerMediaCollections(): void
@@ -42,7 +47,7 @@ class Category extends Model implements HasMedia
         return $this->hasMany(Product::class);
     }
     //Accessors
-    public function getNestedAttribute(): string
+    public function getNestedNameAttribute(): string
     {
         switch ($this->depth) {
             case 0:
